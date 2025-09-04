@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Fliegende Herzjagd 💜</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #9333ea, #ec4899);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    h1 {
+      margin: 20px;
+    }
+    #gameArea {
+      position: relative;
+      width: 100vw;
+      height: 70vh;
+      border: 2px dashed white;
+      margin: auto;
+      overflow: hidden;
+    }
+    .heart {
+      position: absolute;
+      font-size: 2em;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s;
+    }
+    .heart:hover {
+      transform: scale(1.3);
+    }
+    #message {
+      display: none;
+      margin-top: 20px;
+      font-size: 1.3em;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>💌 Fang alle fliegenden Herzen, um deine Überraschung zu bekommen!</h1>
+  <p>Klicke auf die 💜-Herzen, bevor sie entkommen!</p>
+  <div id="gameArea"></div>
+  
+  <div id="message">
+    <p>🎉 Wow, du hast alle Herzen gefangen!</p>
+    <p>Und hier ist dein Geschenk:</p>
+    <p><a href="https://open.spotify.com/" target="_blank" style="color:#fff;">Eine Playlist nur für dich 🎶</a></p>
+    <p>PS: Du hast mein Herz sowieso schon 💜</p>
+  </div>
+  
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const message = document.getElementById("message");
+    let heartsToCatch = 7; // Anzahl der Herzen
+    
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.textContent = "💜";
+      
+      let x = Math.random() * (gameArea.clientWidth - 40);
+      let y = Math.random() * (gameArea.clientHeight - 40);
+      let dx = (Math.random() - 0.5) * 4; // Geschwindigkeit X
+      let dy = (Math.random() - 0.5) * 4; // Geschwindigkeit Y
+      
+      heart.style.top = y + "px";
+      heart.style.left = x + "px";
+      
+      heart.addEventListener("click", () => {
+        heart.remove();
+        heartsToCatch--;
+        if(heartsToCatch === 0) {
+          message.style.display = "block";
+        }
+      });
+      
+      gameArea.appendChild(heart);
+      
+      function move() {
+        if (!document.body.contains(heart)) return; // Stop wenn gefangen
+        
+        x += dx;
+        y += dy;
+        
+        if (x <= 0 || x >= gameArea.clientWidth - 40) dx *= -1;
+        if (y <= 0 || y >= gameArea.clientHeight - 40) dy *= -1;
+        
+        heart.style.left = x + "px";
+        heart.style.top = y + "px";
+        
+        requestAnimationFrame(move);
+      }
+      move();
+    }
+    
+    // Start: Herzen erscheinen lassen
+    for (let i = 0; i < heartsToCatch; i++) {
+      createHeart();
+    }
+  </script>
+</body>
+</html>
